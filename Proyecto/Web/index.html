@@ -64,6 +64,102 @@
             border: 1px solid #ccc;
             margin-left: 10px;
         }
+
+        /* ── Widget de Clima Flotante ── */
+        #weather-widget {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9999;
+            width: 190px;
+            background: rgba(255, 252, 242, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 163, 115, 0.35);
+            border-radius: 18px;
+            padding: 16px 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(212,163,115,0.2);
+            font-family: 'Poppins', sans-serif;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        #weather-widget:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(212,163,115,0.3);
+        }
+        .weather-city {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #d4a373;
+            margin-bottom: 6px;
+        }
+        .weather-main {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .weather-icon {
+            font-size: 2.4rem;
+            line-height: 1;
+        }
+        .weather-temp {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1;
+        }
+        .weather-temp sup {
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            color: #888;
+        }
+        .weather-desc {
+            font-size: 0.78rem;
+            color: #555;
+            text-transform: capitalize;
+            margin-bottom: 8px;
+        }
+        .weather-details {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid rgba(212,163,115,0.2);
+            padding-top: 8px;
+            margin-top: 4px;
+        }
+        .weather-detail-item {
+            text-align: center;
+        }
+        .weather-detail-item span {
+            display: block;
+        }
+        .weather-detail-item .wd-val {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .weather-detail-item .wd-lbl {
+            font-size: 0.62rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .weather-loading {
+            font-size: 0.8rem;
+            color: #aaa;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .weather-divider {
+            width: 24px;
+            height: 2px;
+            background: #d4a373;
+            border-radius: 2px;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -189,6 +285,67 @@
             </div>
         </div>
     </section>
+
+    <!-- ── Widget de Clima Flotante – Valladolid, Yuc. ── -->
+    <div id="weather-widget">
+        <div class="weather-loading">🌤️ Cargando clima…</div>
+    </div>
+
+    <script>
+    (function() {
+        const API_KEY = 'af902c2a35f8f1aec94c58d050e5feca';
+        const LAT = 20.6897;
+        const LON = -88.2023;
+        const URL = `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=metric&lang=es`;
+
+        const iconMap = {
+            '01d':'☀️','01n':'🌙','02d':'⛅','02n':'☁️',
+            '03d':'☁️','03n':'☁️','04d':'☁️','04n':'☁️',
+            '09d':'🌧️','09n':'🌧️','10d':'🌦️','10n':'🌧️',
+            '11d':'⛈️','11n':'⛈️','13d':'❄️','13n':'❄️',
+            '50d':'🌫️','50n':'🌫️'
+        };
+
+        fetch(URL)
+            .then(r => r.json())
+            .then(d => {
+                const temp   = Math.round(d.main.temp);
+                const feels  = Math.round(d.main.feels_like);
+                const humid  = d.main.humidity;
+                const wind   = Math.round(d.wind.speed * 3.6); // m/s → km/h
+                const desc   = d.weather[0].description;
+                const icon   = iconMap[d.weather[0].icon] || '🌤️';
+
+                document.getElementById('weather-widget').innerHTML = `
+                    <div class="weather-city">📍 Valladolid, Yuc.</div>
+                    <div class="weather-divider"></div>
+                    <div class="weather-main">
+                        <div class="weather-icon">${icon}</div>
+                        <div class="weather-temp">${temp}<sup>°C</sup></div>
+                    </div>
+                    <div class="weather-desc">${desc}</div>
+                    <div class="weather-details">
+                        <div class="weather-detail-item">
+                            <span class="wd-val">${feels}°</span>
+                            <span class="wd-lbl">Sensación</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="wd-val">${humid}%</span>
+                            <span class="wd-lbl">Humedad</span>
+                        </div>
+                        <div class="weather-detail-item">
+                            <span class="wd-val">${wind}</span>
+                            <span class="wd-lbl">km/h</span>
+                        </div>
+                    </div>
+                `;
+            })
+            .catch(() => {
+                document.getElementById('weather-widget').innerHTML =
+                    `<div class="weather-loading">Sin datos de clima</div>`;
+            });
+    })();
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
