@@ -215,30 +215,131 @@
             font-size: 0.65rem; font-weight: 600; letter-spacing: 0.24em;
             text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block;
         }
+        /* ── Dish card grid ── */
         .menu-selection-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 8px; margin-bottom: 28px; text-align: left;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 28px;
         }
-        .item-check {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-            padding: 12px 14px; display: flex; align-items: center; gap: 10px;
-            cursor: pointer; font-size: 0.85rem; color: rgba(245,239,224,0.75);
-            transition: background 0.25s, border-color 0.25s;
+        .dish-card {
+            position: relative;
+            border: 2px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+            background: var(--mist);
+            user-select: none;
         }
-        .item-check:hover { background: rgba(201,150,58,0.08); border-color: rgba(201,150,58,0.5); }
-        .item-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--gold); margin: 0; flex-shrink: 0; }
-        .billing-details {
-            background: rgba(201,150,58,0.06); border: 1px solid var(--border);
-            border-left: 3px solid var(--gold); padding: 20px 22px; margin-bottom: 20px;
+        .dish-card:hover {
+            border-color: rgba(201,150,58,0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
-        .billing-details label {
-            font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
-            color: var(--warm); display: block; margin-bottom: 6px;
+        .dish-card.selected {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 1px var(--gold), 0 8px 28px rgba(201,150,58,0.18);
         }
-        #metodo-pago, #tipo-entrega { margin: 0 0 10px 0; }
-        #metodo-pago option, #tipo-entrega option { background: var(--mist); color: var(--cream); }
-        #notas-adicionales { height: 100px; resize: vertical; margin: 16px 0; }
-        .submit-row { text-align: center; margin-top: 10px; }
+        .dish-card input[type="checkbox"] { display: none; }
+        .dish-card-img {
+            width: 100%; height: 108px;
+            object-fit: cover; display: block;
+            filter: brightness(0.65) saturate(0.7);
+            transition: filter 0.35s;
+        }
+        .dish-card:hover .dish-card-img,
+        .dish-card.selected .dish-card-img { filter: brightness(0.88) saturate(1.05); }
+        .dish-card-body { padding: 10px 12px 13px; }
+        .dish-card-name {
+            font-family: var(--serif);
+            font-size: 1rem; font-weight: 400;
+            color: var(--cream); line-height: 1.2; margin-bottom: 3px;
+        }
+        .dish-card-price {
+            font-size: 0.78rem; font-weight: 500; color: var(--warm);
+            transition: color 0.2s;
+        }
+        .dish-card.selected .dish-card-price { color: var(--gold); }
+        .dish-check-badge {
+            position: absolute; top: 8px; right: 8px;
+            width: 24px; height: 24px;
+            background: var(--gold); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transform: scale(0.4);
+            transition: opacity 0.2s, transform 0.25s cubic-bezier(.34,1.56,.64,1);
+            font-size: 0.7rem; color: var(--ink); font-weight: 800;
+        }
+        .dish-card.selected .dish-check-badge { opacity: 1; transform: scale(1); }
+
+        /* ── Live order summary bar ── */
+        .order-summary {
+            background: rgba(201,150,58,0.06);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--gold);
+            padding: 16px 22px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 56px;
+        }
+        .order-summary-left { font-size: 0.8rem; color: var(--warm); line-height: 1.55; }
+        .order-summary-left .os-count { color: var(--cream); font-weight: 600; }
+        .order-summary-left .os-items { font-size: 0.72rem; color: rgba(122,106,88,0.8); }
+        .order-summary-total {
+            text-align: right;
+        }
+        .order-summary-total .os-total-num {
+            font-family: var(--serif);
+            font-size: 1.65rem; font-weight: 600; color: var(--gold); line-height: 1;
+        }
+        .order-summary-total .os-total-lbl {
+            font-size: 0.6rem; color: var(--warm); letter-spacing: 0.1em;
+            text-transform: uppercase; display: block; margin-top: 2px;
+        }
+
+        /* ── Pill selectors for pago & entrega ── */
+        .field-group { margin-bottom: 22px; }
+        .field-label {
+            font-size: 0.64rem; font-weight: 600; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 10px;
+        }
+        .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        .pill-option { position: relative; cursor: pointer; }
+        .pill-option input[type="radio"] { display: none; }
+        .pill-label {
+            display: flex; align-items: center; gap: 7px;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            font-size: 0.82rem; color: rgba(245,239,224,0.6);
+            transition: all 0.2s; white-space: nowrap; cursor: pointer;
+        }
+        .pill-label .pill-icon { font-size: 1rem; }
+        .pill-option input:checked + .pill-label {
+            background: rgba(201,150,58,0.13);
+            border-color: var(--gold);
+            color: var(--cream);
+        }
+        .pill-label:hover { border-color: rgba(201,150,58,0.5); color: var(--cream); }
+
+        /* hidden native selects – kept for JS data reading */
+        #metodo-pago, #tipo-entrega { display: none; }
+
+        .notes-label {
+            font-size: 0.64rem; font-weight: 600; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 8px;
+        }
+        #notas-adicionales {
+            height: 88px; resize: vertical;
+            background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+            color: var(--cream); font-family: var(--sans); font-size: 0.88rem;
+            padding: 12px 16px; outline: none; width: 100%;
+            transition: border-color 0.3s, background 0.3s;
+        }
+        #notas-adicionales:focus { border-color: var(--gold); background: rgba(201,150,58,0.05); }
+        #notas-adicionales::placeholder { color: rgba(122,106,88,0.55); }
+        .submit-row { text-align: center; margin-top: 28px; }
         .submit-row .btn { padding: 16px 54px; flex: none; }
         .success-card { text-align: center; padding: 50px 20px; animation: fadeUp 0.5s ease both; }
         .icon-check { font-size: 2.4rem; margin-bottom: 18px; color: var(--gold); }
@@ -275,27 +376,51 @@
             color: var(--cream); font-family: var(--sans); font-size: 0.78rem; margin-left: 8px;
         }
 
-        /* WEATHER */
+        /* WEATHER WIDGET */
         #weather-widget {
-            position: fixed; bottom: 28px; right: 28px; z-index: 9999; width: 196px;
-            background: rgba(26,21,16,0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border); padding: 18px 20px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.5); font-family: var(--sans);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: fixed; bottom: 28px; right: 28px; z-index: 9999; width: 220px;
+            background: rgba(18,14,10,0.96); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--border);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.55); font-family: var(--sans);
+            transition: box-shadow 0.3s ease;
         }
-        #weather-widget:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
-        .weather-city { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
-        .weather-divider { width: 20px; height: 1px; background: var(--gold); margin-bottom: 10px; opacity: 0.6; }
-        .weather-main { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-        .weather-icon { font-size: 2.2rem; line-height: 1; }
-        .weather-temp { font-family: var(--serif); font-size: 2.2rem; font-weight: 300; color: var(--cream); line-height: 1; }
+        #weather-widget:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.65); }
+        #weather-widget.collapsed #weather-body {
+            max-height: 0; overflow: hidden; padding: 0;
+            border-top: none; opacity: 0;
+        }
+        #weather-widget.collapsed #weather-toggle-icon { transform: rotate(180deg); }
+        #weather-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 11px 14px; cursor: pointer; user-select: none;
+        }
+        .wh-left { display: flex; align-items: center; gap: 8px; }
+        .wh-icon-sm { font-size: 1.1rem; line-height: 1; }
+        .wh-temp-sm { font-family: var(--serif); font-size: 1.1rem; font-weight: 300; color: var(--cream); line-height: 1; }
+        .wh-city { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+        #weather-toggle-icon { font-size: 0.75rem; color: var(--warm); transition: transform 0.35s ease; line-height: 1; }
+        #weather-body {
+            max-height: 320px; overflow: hidden; opacity: 1;
+            padding: 0 16px 16px;
+            border-top: 1px solid var(--border);
+            transition: max-height 0.38s ease, opacity 0.3s ease, padding 0.3s ease;
+        }
+        .weather-main { display: flex; align-items: center; gap: 10px; padding-top: 14px; margin-bottom: 4px; }
+        .weather-icon { font-size: 2.4rem; line-height: 1; }
+        .weather-temp { font-family: var(--serif); font-size: 2.4rem; font-weight: 300; color: var(--cream); line-height: 1; }
         .weather-temp sup { font-size: 0.85rem; font-family: var(--sans); font-weight: 300; color: var(--warm); }
         .weather-desc { font-size: 0.74rem; font-weight: 300; color: var(--warm); text-transform: capitalize; margin-bottom: 12px; }
-        .weather-details { display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 10px; }
+        .weather-details { display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 10px; margin-bottom: 12px; }
         .weather-detail-item { text-align: center; }
         .weather-detail-item .wd-val { display: block; font-size: 0.8rem; font-weight: 500; color: var(--cream); }
         .weather-detail-item .wd-lbl { display: block; font-size: 0.58rem; color: var(--warm); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
-        .weather-loading { font-size: 0.78rem; color: var(--warm); text-align: center; padding: 8px 0; }
+        .weather-rec {
+            background: rgba(201,150,58,0.09); border: 1px solid rgba(201,150,58,0.25);
+            border-left: 2px solid var(--gold); padding: 9px 11px;
+        }
+        .weather-rec-label { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 3px; }
+        .weather-rec-text { font-size: 0.78rem; color: var(--cream); line-height: 1.45; }
+        .weather-loading { font-size: 0.78rem; color: var(--warm); text-align: center; padding: 14px 0; }
 
         /* FOOTER */
         footer { background: var(--mist2); border-top: 1px solid var(--border); padding: 50px 7% 30px; text-align: center; }
@@ -425,34 +550,169 @@
         <div id="pedido-form" class="pedido-form hidden">
             <p class="welcome-msg">Bienvenido/a, <span id="display-user"></span> — ¿qué se te antoja hoy?</p>
             <form id="form-pedido-real">
-                <span class="form-section-label">Selecciona tus platillos</span>
+
+                <!-- STEP 1: Dish cards -->
+                <span class="form-section-label">① Elige tus platillos</span>
                 <div class="menu-selection-grid">
-                    <label class="item-check"><input type="checkbox" name="plato" value="Frijol con Puerco" data-precio="150"> Frijol con Puerco ($150)</label>
-                    <label class="item-check"><input type="checkbox" name="plato" value="Chilaquiles Rojos" data-precio="120"> Chilaquiles Rojos ($120)</label>
-                    <label class="item-check"><input type="checkbox" name="plato" value="Pozole Tradicional" data-precio="140"> Pozole Tradicional ($140)</label>
-                    <label class="item-check"><input type="checkbox" name="plato" value="Cochinita Pibil" data-precio="160"> Cochinita Pibil ($160)</label>
-                    <label class="item-check"><input type="checkbox" name="plato" value="Relleno Negro" data-precio="160"> Relleno Negro ($160)</label>
-                    <label class="item-check"><input type="checkbox" name="plato" value="Chiles Rellenos" data-precio="130"> Chiles Rellenos ($130)</label>
-                    <label class="item-check"><input type="checkbox" name="plato" value="Empanizado de Pollo" data-precio="115"> Empanizado de Pollo ($115)</label>
-                    <label class="item-check"><input type="checkbox" name="plato" value="Empanizado de Cerdo" data-precio="115"> Empanizado de Cerdo ($115)</label>
-                    <label class="item-check"><input type="checkbox" name="plato" value="Escabeche" data-precio="145"> Escabeche ($145)</label>
-                    <label class="item-check"><input type="checkbox" name="plato" value="Mole" data-precio="135"> Mole ($135)</label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Frijol con Puerco" data-precio="150">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1613514785940-daed07799d9b?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Frijol con Puerco</div>
+                            <div class="dish-card-price">$150</div>
+                        </div>
+                    </label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Chilaquiles Rojos" data-precio="120">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Chilaquiles Rojos</div>
+                            <div class="dish-card-price">$120</div>
+                        </div>
+                    </label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Pozole Tradicional" data-precio="140">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Pozole Tradicional</div>
+                            <div class="dish-card-price">$140</div>
+                        </div>
+                    </label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Cochinita Pibil" data-precio="160">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Cochinita Pibil</div>
+                            <div class="dish-card-price">$160</div>
+                        </div>
+                    </label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Relleno Negro" data-precio="160">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Relleno Negro</div>
+                            <div class="dish-card-price">$160</div>
+                        </div>
+                    </label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Chiles Rellenos" data-precio="130">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Chiles Rellenos</div>
+                            <div class="dish-card-price">$130</div>
+                        </div>
+                    </label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Empanizado de Pollo" data-precio="115">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Empanizado de Pollo</div>
+                            <div class="dish-card-price">$115</div>
+                        </div>
+                    </label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Empanizado de Cerdo" data-precio="115">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Empanizado de Cerdo</div>
+                            <div class="dish-card-price">$115</div>
+                        </div>
+                    </label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Escabeche" data-precio="145">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Escabeche</div>
+                            <div class="dish-card-price">$145</div>
+                        </div>
+                    </label>
+                    <label class="dish-card" onclick="toggleDish(this)">
+                        <input type="checkbox" name="plato" value="Mole" data-precio="135">
+                        <img class="dish-card-img" src="https://images.unsplash.com/photo-1574484284002-952d92456975?auto=format&fit=crop&w=400&q=70" alt="">
+                        <div class="dish-check-badge">✓</div>
+                        <div class="dish-card-body">
+                            <div class="dish-card-name">Mole</div>
+                            <div class="dish-card-price">$135</div>
+                        </div>
+                    </label>
                 </div>
-                <div class="billing-details">
-                    <label><strong>Método de Pago</strong></label>
-                    <select id="metodo-pago">
-                        <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
-                        <option value="Tarjeta de Débito">Tarjeta de Débito</option>
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-                    </select>
-                    <label style="margin-top:12px;"><strong>Tipo de Entrega</strong></label>
-                    <select id="tipo-entrega">
-                        <option value="A domicilio">A domicilio (Envío: $25.00)</option>
-                        <option value="Para recoger">Para recoger en Sucursal ($0.00)</option>
-                    </select>
+
+                <!-- Live summary bar -->
+                <div class="order-summary" id="order-summary">
+                    <div class="order-summary-left">
+                        <div>Platillos seleccionados: <span class="os-count" id="os-count">0</span></div>
+                        <div class="os-items" id="os-items">Toca una tarjeta para agregar</div>
+                    </div>
+                    <div class="order-summary-total">
+                        <div class="os-total-num" id="os-total">$0</div>
+                        <span class="os-total-lbl">subtotal</span>
+                    </div>
                 </div>
-                <textarea id="notas-adicionales" placeholder="¿Alguna instrucción especial? (ej. sin cebolla, extra picante…)"></textarea>
+
+                <!-- STEP 2: Payment method -->
+                <div class="field-group">
+                    <span class="field-label">② Método de pago</span>
+                    <div class="pill-group">
+                        <label class="pill-option">
+                            <input type="radio" name="pago" value="Tarjeta de Crédito" onchange="syncSelect('metodo-pago',this.value)" checked>
+                            <span class="pill-label"><span class="pill-icon">💳</span> Crédito</span>
+                        </label>
+                        <label class="pill-option">
+                            <input type="radio" name="pago" value="Tarjeta de Débito" onchange="syncSelect('metodo-pago',this.value)">
+                            <span class="pill-label"><span class="pill-icon">🏦</span> Débito</span>
+                        </label>
+                        <label class="pill-option">
+                            <input type="radio" name="pago" value="Efectivo" onchange="syncSelect('metodo-pago',this.value)">
+                            <span class="pill-label"><span class="pill-icon">💵</span> Efectivo</span>
+                        </label>
+                        <label class="pill-option">
+                            <input type="radio" name="pago" value="Transferencia Bancaria" onchange="syncSelect('metodo-pago',this.value)">
+                            <span class="pill-label"><span class="pill-icon">📲</span> Transferencia</span>
+                        </label>
+                    </div>
+                </div>
+                <!-- hidden select for JS compat -->
+                <select id="metodo-pago">
+                    <option value="Tarjeta de Crédito" selected>Tarjeta de Crédito</option>
+                    <option value="Tarjeta de Débito">Tarjeta de Débito</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                </select>
+
+                <!-- STEP 3: Delivery type -->
+                <div class="field-group">
+                    <span class="field-label">③ Tipo de entrega</span>
+                    <div class="pill-group">
+                        <label class="pill-option">
+                            <input type="radio" name="entrega" value="A domicilio" onchange="syncSelect('tipo-entrega',this.value); updateSummary()" checked>
+                            <span class="pill-label"><span class="pill-icon">🛵</span> A domicilio <em style="font-style:normal;opacity:0.6;font-size:0.75rem;"> +$25</em></span>
+                        </label>
+                        <label class="pill-option">
+                            <input type="radio" name="entrega" value="Para recoger" onchange="syncSelect('tipo-entrega',this.value); updateSummary()">
+                            <span class="pill-label"><span class="pill-icon">🏠</span> Recoger en sucursal <em style="font-style:normal;opacity:0.6;font-size:0.75rem;"> gratis</em></span>
+                        </label>
+                    </div>
+                </div>
+                <select id="tipo-entrega">
+                    <option value="A domicilio" selected>A domicilio (Envío: $25.00)</option>
+                    <option value="Para recoger">Para recoger en Sucursal ($0.00)</option>
+                </select>
+
+                <!-- STEP 4: Notes -->
+                <div class="field-group">
+                    <span class="field-label">④ Notas especiales</span>
+                    <textarea id="notas-adicionales" placeholder="ej. sin cebolla, extra picante, alergia al gluten…"></textarea>
+                </div>
+
                 <div class="submit-row">
                     <button type="submit" class="btn">Confirmar Pedido</button>
                 </div>
@@ -501,29 +761,67 @@
         <p>Valladolid, Yucatán · México &nbsp;·&nbsp; Sabores que perduran</p>
     </footer>
 
-    <div id="weather-widget"><div class="weather-loading">Cargando clima…</div></div>
+    <div id="weather-widget"><div id="weather-header"><div class="wh-left"><span class="wh-icon-sm">🌤️</span><div><div class="wh-city">📍 Valladolid</div><div class="wh-temp-sm" id="wh-temp-mini">…</div></div></div><span id="weather-toggle-icon">▲</span></div><div id="weather-body"><div class="weather-loading">Cargando clima…</div></div></div>
 
     <script>
     (function() {
         const API_KEY = 'af902c2a35f8f1aec94c58d050e5feca';
         const URL = `https://api.openweathermap.org/data/2.5/weather?lat=20.6897&lon=-88.2023&appid=${API_KEY}&units=metric&lang=es`;
         const iconMap = {'01d':'☀️','01n':'🌙','02d':'⛅','02n':'☁️','03d':'☁️','03n':'☁️','04d':'☁️','04n':'☁️','09d':'🌧️','09n':'🌧️','10d':'🌦️','10n':'🌧️','11d':'⛈️','11n':'⛈️','13d':'❄️','13n':'❄️','50d':'🌫️','50n':'🌫️'};
+
+        function getRecommendation(temp, code) {
+            // code = weather condition id from OWM
+            if (code >= 200 && code < 300) return { dish:'Pozole Tradicional 🍲', reason:'Con tormenta, un caldo caliente reconforta el alma.' };
+            if (code >= 300 && code < 600) return { dish:'Frijol con Puerco 🫘', reason:'Día lluvioso = día de guiso. Perfecto para calentarse.' };
+            if (code >= 600 && code < 700) return { dish:'Relleno Negro 🫕', reason:'Frío inusual — el recado negro te dará calor.' };
+            if (code >= 700 && code < 800) return { dish:'Chilaquiles Rojos 🌶️', reason:'Niebla o bruma: ideal para un desayuno reconfortante.' };
+            // clear / clouds
+            if (temp >= 34) return { dish:'Escabeche 🥗', reason:'Calor intenso — un platillo ligero y fresco es lo ideal.' };
+            if (temp >= 28) return { dish:'Cochinita Pibil 🌮', reason:'Clima caluroso y soleado, ¡el sabor yucateco en su mejor momento!' };
+            if (temp >= 22) return { dish:'Chiles Rellenos 🫑', reason:'Temperatura perfecta para disfrutar un clásico completo.' };
+            return { dish:'Mole 🍗', reason:'Noche fresca — el mole con su profundidad de sabor es ideal.' };
+        }
+
         fetch(URL).then(r=>r.json()).then(d=>{
-            const icon=iconMap[d.weather[0].icon]||'🌤️';
-            document.getElementById('weather-widget').innerHTML=`
-                <div class="weather-city">📍 Valladolid, Yuc.</div>
-                <div class="weather-divider"></div>
+            const temp = Math.round(d.main.temp);
+            const feels = Math.round(d.main.feels_like);
+            const humidity = d.main.humidity;
+            const wind = Math.round(d.wind.speed * 3.6);
+            const desc = d.weather[0].description;
+            const code = d.weather[0].id;
+            const icon = iconMap[d.weather[0].icon] || '🌤️';
+            const rec = getRecommendation(temp, code);
+
+            // Update mini header
+            const miniIcon = document.querySelector('.wh-icon-sm');
+            const miniTemp = document.getElementById('wh-temp-mini');
+            if(miniIcon) miniIcon.textContent = icon;
+            if(miniTemp) miniTemp.textContent = temp + '°C';
+
+            // Fill body
+            document.getElementById('weather-body').innerHTML = `
                 <div class="weather-main">
                     <div class="weather-icon">${icon}</div>
-                    <div class="weather-temp">${Math.round(d.main.temp)}<sup>°C</sup></div>
+                    <div class="weather-temp">${temp}<sup>°C</sup></div>
                 </div>
-                <div class="weather-desc">${d.weather[0].description}</div>
+                <div class="weather-desc">${desc}</div>
                 <div class="weather-details">
-                    <div class="weather-detail-item"><span class="wd-val">${Math.round(d.main.feels_like)}°</span><span class="wd-lbl">Sensación</span></div>
-                    <div class="weather-detail-item"><span class="wd-val">${d.main.humidity}%</span><span class="wd-lbl">Humedad</span></div>
-                    <div class="weather-detail-item"><span class="wd-val">${Math.round(d.wind.speed*3.6)}</span><span class="wd-lbl">km/h</span></div>
+                    <div class="weather-detail-item"><span class="wd-val">${feels}°</span><span class="wd-lbl">Sensación</span></div>
+                    <div class="weather-detail-item"><span class="wd-val">${humidity}%</span><span class="wd-lbl">Humedad</span></div>
+                    <div class="weather-detail-item"><span class="wd-val">${wind}</span><span class="wd-lbl">km/h</span></div>
+                </div>
+                <div class="weather-rec">
+                    <span class="weather-rec-label">✦ Te recomendamos</span>
+                    <div class="weather-rec-text"><strong>${rec.dish}</strong><br><span style="opacity:0.75;font-size:0.72rem;">${rec.reason}</span></div>
                 </div>`;
-        }).catch(()=>{ document.getElementById('weather-widget').innerHTML='<div class="weather-loading">Sin datos</div>'; });
+        }).catch(()=>{
+            document.getElementById('weather-body').innerHTML = '<div class="weather-loading">Sin datos de clima</div>';
+        });
+
+        // Toggle collapse / expand
+        document.getElementById('weather-header').addEventListener('click', () => {
+            document.getElementById('weather-widget').classList.toggle('collapsed');
+        });
     })();
     window.addEventListener('scroll', () => {
         document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 60);
@@ -532,6 +830,38 @@
         entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* ── Dish card toggle ── */
+    window.toggleDish = function(card) {
+        const cb = card.querySelector('input[type="checkbox"]');
+        cb.checked = !cb.checked;
+        card.classList.toggle('selected', cb.checked);
+        updateSummary();
+    };
+
+    /* ── Sync hidden <select> from pill radios ── */
+    window.syncSelect = function(id, val) {
+        const sel = document.getElementById(id);
+        if (sel) sel.value = val;
+    };
+
+    /* ── Live order summary ── */
+    window.updateSummary = function() {
+        const checked = document.querySelectorAll('input[name="plato"]:checked');
+        let sub = 0;
+        const names = [];
+        checked.forEach(cb => { sub += parseFloat(cb.getAttribute('data-precio')); names.push(cb.value); });
+        const entregaRadio = document.querySelector('input[name="entrega"]:checked');
+        const envio = (entregaRadio && entregaRadio.value === 'A domicilio') ? 25 : 0;
+        const total = sub + envio;
+        const countEl  = document.getElementById('os-count');
+        const itemsEl  = document.getElementById('os-items');
+        const totalEl  = document.getElementById('os-total');
+        if (!countEl) return;
+        countEl.textContent = checked.length;
+        itemsEl.textContent = names.length ? names.join(' · ') : 'Toca una tarjeta para agregar';
+        totalEl.textContent = '$' + total.toLocaleString('es-MX');
+    };
     </script>
 
     <script type="module">
